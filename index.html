@@ -130,12 +130,16 @@
       background: #121726;
       border: 1px solid #334155;
       color: #E2E8F0;
-      width: 38px;
       height: 38px;
+      min-width: 38px;
+      padding: 0 10px;
       border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-family: var(--font-heading);
+      font-size: 12px;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.2s ease;
     }
@@ -143,6 +147,62 @@
     .icon-btn:hover {
       border-color: var(--accent);
       color: var(--accent-light);
+    }
+
+    .login-screen {
+      max-width: 440px;
+      width: 100%;
+      margin: 32px auto;
+      padding: 0 16px;
+      flex: 1;
+    }
+
+    .login-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .login-header img {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      border: 1px solid rgba(225, 29, 72, 0.5);
+      background: #0B0E17;
+      padding: 4px;
+      margin-bottom: 10px;
+    }
+
+    .login-header h2 {
+      font-family: var(--font-heading);
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .login-header p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 5px;
     }
 
     .tabs {
@@ -247,7 +307,7 @@
       flex: 1;
     }
 
-    input[type="text"], input[type="number"], input[type="password"], textarea {
+    input[type="text"], input[type="email"], input[type="number"], input[type="password"], select, textarea {
       width: 100%;
       background: var(--bg-input);
       border: 1px solid var(--border);
@@ -260,7 +320,7 @@
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
-    input:focus, textarea:focus {
+    input:focus, select:focus, textarea:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 3px var(--accent-glow);
     }
@@ -386,6 +446,16 @@
       border-radius: 6px;
       background: rgba(16, 185, 129, 0.15);
       color: #34D399;
+      white-space: nowrap;
+    }
+
+    .insumo-tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: rgba(59, 130, 246, 0.18);
+      color: #60A5FA;
       white-space: nowrap;
     }
 
@@ -585,10 +655,62 @@
       border-top: 1px solid var(--border);
     }
 
+    .admin-subtabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .admin-subtab {
+      padding: 9px 8px;
+      border-radius: 8px;
+      font-family: var(--font-heading);
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      background: var(--bg-card-alt);
+      color: var(--text-muted);
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .admin-subtab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #FFFFFF;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .manage-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--bg-card-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
     .filter-pills {
       display: flex;
       gap: 6px;
       margin-bottom: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .filter-pills-left {
+      display: flex;
+      gap: 6px;
       flex-wrap: wrap;
     }
 
@@ -653,155 +775,245 @@
         />
         <div class="brand-text">
           <h1>SARAIVA LABS</h1>
-          <span id="headerSubtitle">Solicitação • Loja Hortolândia</span>
+          <span id="headerSubtitle">Portal de Solicitações CD</span>
         </div>
       </div>
       <div class="header-actions">
-        <button class="icon-btn" id="btnRefresh" title="Atualizar saldo do CD">↻</button>
+        <button class="icon-btn hidden" id="btnRefresh" title="Atualizar saldo do CD">↻</button>
         <button class="icon-btn" id="btnTheme" title="Alternar tema claro e escuro">☀</button>
+        <button class="icon-btn hidden" id="btnLogout" title="Sair da unidade">Sair</button>
       </div>
     </div>
   </header>
 
-  <nav class="tabs">
-    <button class="tab-btn active" data-tab="nova">
-      Nova Solicitação <span class="badge-count" id="badgeCart">0</span>
-    </button>
-    <button class="tab-btn" data-tab="historico">
-      Meus Pedidos <span class="badge-count" id="badgeOrders">0</span>
-    </button>
-    <button class="tab-btn" data-tab="gestao" title="Acesso restrito ao Gestor do CD">
-      🔒 CD
-    </button>
-  </nav>
+  <!-- TELA DE LOGIN POR LOJA -->
+  <section class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <div class="login-header">
+        <img src="https://lgsaraivaasouza.github.io/midia-saraiva-labs/logo-oficial-saraiva-labs.png" alt="Logo SARAIVA LABS" />
+        <h2>Acesso Restrito • Lojas</h2>
+        <p>Informe o usuário e a senha da sua unidade para solicitar materiais ao CD.</p>
+      </div>
 
-  <main>
-    <!-- ABA 1: NOVA SOLICITAÇÃO -->
-    <section id="tab-nova">
-      <div class="card">
-        <div class="card-title">
-          <span>Buscar ou Bipar Produto</span>
-          <span class="status-pill loading" id="syncStatus">Conectando Supabase...</span>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginUsuario">Usuário da Loja</label>
+          <input type="text" id="loginUsuario" placeholder="Ex: hortolandia" autocomplete="username" required />
         </div>
-
-        <div class="search-row">
-          <div class="search-input-wrap">
-            <input type="text" id="searchInput" placeholder="Digite EAN, SKU ou nome do produto..." autocomplete="off" />
-          </div>
-          <button class="btn-primary btn-scan" id="btnOpenScanner" type="button">
-            📷 Bipar
-          </button>
+        <div class="form-group">
+          <label for="loginSenha">Senha</label>
+          <input type="password" id="loginSenha" placeholder="Digite a senha da unidade" autocomplete="current-password" required />
         </div>
+        <div class="alert-box alert-error" id="loginError"></div>
+        <button class="btn-primary" id="btnLoginSubmit" type="submit" style="width:100%;margin-top:8px;padding:14px;">
+          Entrar no Sistema
+        </button>
+      </form>
+    </div>
+  </section>
 
-        <div class="alert-box alert-error" id="searchAlert"></div>
-        <div class="search-results" id="searchResults"></div>
+  <!-- CONTEÚDO AUTENTICADO -->
+  <div id="appContainer" class="hidden" style="display:flex;flex-direction:column;flex:1;">
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="nova">
+        Nova Solicitação <span class="badge-count" id="badgeCart">0</span>
+      </button>
+      <button class="tab-btn" data-tab="historico">
+        Meus Pedidos <span class="badge-count" id="badgeOrders">0</span>
+      </button>
+      <button class="tab-btn" data-tab="gestao" title="Acesso restrito ao Gestor do CD">
+        🔒 CD
+      </button>
+    </nav>
 
-        <!-- Produto Selecionado -->
-        <div class="selected-box" id="selectedBox">
-          <div class="selected-header">
-            <div>
-              <strong id="selDesc" style="font-size:14px;display:block;margin-bottom:4px;"></strong>
-              <span class="result-meta" id="selMeta"></span>
-            </div>
-            <span class="saldo-tag" id="selSaldo"></span>
+    <main>
+      <!-- ABA 1: NOVA SOLICITAÇÃO -->
+      <section id="tab-nova">
+        <div class="card">
+          <div class="card-title">
+            <span>Buscar Produto ou Insumo</span>
+            <span class="status-pill loading" id="syncStatus">Sincronizando...</span>
           </div>
-          <div class="selected-controls">
-            <div class="qty-wrap">
-              <button class="qty-btn" id="btnQtyMinus" type="button">−</button>
-              <input type="number" class="qty-input" id="selQty" value="1" min="1" />
-              <button class="qty-btn" id="btnQtyPlus" type="button">+</button>
+
+          <div class="search-row">
+            <div class="search-input-wrap">
+              <input type="text" id="searchInput" placeholder="Digite EAN, SKU, sacola, bobina ou nome..." autocomplete="off" />
             </div>
-            <button class="btn-primary" id="btnAddCart" type="button" style="flex:1;">
-              Adicionar ao Carrinho
+            <button class="btn-primary btn-scan" id="btnOpenScanner" type="button">
+              📷 Bipar
             </button>
-            <button class="btn-secondary" id="btnCancelSel" type="button">Cancelar</button>
+          </div>
+
+          <div class="alert-box alert-error" id="searchAlert"></div>
+          <div class="search-results" id="searchResults"></div>
+
+          <!-- Produto Selecionado -->
+          <div class="selected-box" id="selectedBox">
+            <div class="selected-header">
+              <div>
+                <strong id="selDesc" style="font-size:14px;display:block;margin-bottom:4px;"></strong>
+                <span class="result-meta" id="selMeta"></span>
+              </div>
+              <span class="saldo-tag" id="selSaldo"></span>
+            </div>
+            <div class="selected-controls">
+              <div class="qty-wrap">
+                <button class="qty-btn" id="btnQtyMinus" type="button">−</button>
+                <input type="number" class="qty-input" id="selQty" value="1" min="1" />
+                <button class="qty-btn" id="btnQtyPlus" type="button">+</button>
+              </div>
+              <button class="btn-primary" id="btnAddCart" type="button" style="flex:1;">
+                Adicionar ao Carrinho
+              </button>
+              <button class="btn-secondary" id="btnCancelSel" type="button">Cancelar</button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Carrinho -->
-      <div class="card">
-        <div class="card-title">
-          <span>Carrinho de Solicitação</span>
-          <span style="font-size:12px;color:var(--text-muted);" id="cartSummary">0 itens</span>
+        <!-- Carrinho -->
+        <div class="card">
+          <div class="card-title">
+            <span>Carrinho de Solicitação</span>
+            <span style="font-size:12px;color:var(--text-muted);" id="cartSummary">0 itens</span>
+          </div>
+
+          <div class="cart-list" id="cartList">
+            <div class="empty-state">Nenhum item adicionado ainda. Bipe ou busque um produto ou insumo acima.</div>
+          </div>
+
+          <div id="checkoutArea" class="hidden" style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
+            <label for="obsInput" style="display:block;font-size:12px;color:var(--text-muted);margin-bottom:6px;">
+              Observação para o CD (opcional)
+            </label>
+            <textarea id="obsInput" rows="2" placeholder="Ex: Urgente para reposição de caixa..."></textarea>
+
+            <div class="alert-box alert-error" id="checkoutError"></div>
+            <div class="alert-box alert-success" id="checkoutSuccess"></div>
+
+            <button class="btn-primary" id="btnSubmitOrder" type="button" style="width:100%;margin-top:12px;padding:14px;">
+              Finalizar Solicitação e Enviar ao CD
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ABA 2: MEUS PEDIDOS (LOJA) -->
+      <section id="tab-historico" class="hidden">
+        <div class="card">
+          <div class="card-title">
+            <span>Histórico de Solicitações</span>
+            <button class="btn-secondary" id="btnReloadOrders" type="button" style="padding:6px 10px;font-size:12px;">Atualizar</button>
+          </div>
+          <div id="ordersList">
+            <div class="empty-state">Carregando histórico...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ABA 3: GESTÃO CD -->
+      <section id="tab-gestao" class="hidden">
+        <div class="card" id="adminLockBox">
+          <div class="card-title">
+            <span>Acesso Restrito • Gestão CD</span>
+          </div>
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">
+            Informe o PIN administrativo para gerenciar pedidos, logins das lojas e insumos internos.
+          </p>
+          <div class="search-row">
+            <input type="password" id="adminPinInput" placeholder="Digite o PIN do Gestor..." inputmode="numeric" />
+            <button class="btn-primary" id="btnUnlockAdmin" type="button">Entrar</button>
+          </div>
+          <div class="alert-box alert-error" id="adminLockError"></div>
         </div>
 
-        <div class="cart-list" id="cartList">
-          <div class="empty-state">Nenhum item adicionado ainda. Bipe ou busque um produto acima.</div>
-        </div>
+        <div class="card hidden" id="adminPanelBox">
+          <div class="card-title">
+            <span>Painel do Gestor • CD</span>
+            <button class="btn-secondary" id="btnLockAdmin" type="button" style="padding:6px 10px;font-size:12px;">Bloquear</button>
+          </div>
 
-        <div id="checkoutArea" class="hidden" style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
-          <label for="obsInput" style="display:block;font-size:12px;color:var(--text-muted);margin-bottom:6px;">
-            Observação para o CD (opcional)
-          </label>
-          <textarea id="obsInput" rows="2" placeholder="Ex: Urgente para reposição de gôndola..."></textarea>
+          <div class="admin-subtabs">
+            <button class="admin-subtab active" data-subtab="pedidos">Pedidos</button>
+            <button class="admin-subtab" data-subtab="logins">Logins Lojas</button>
+            <button class="admin-subtab" data-subtab="insumos">Insumos CD</button>
+          </div>
 
-          <div class="alert-box alert-error" id="checkoutError"></div>
-          <div class="alert-box alert-success" id="checkoutSuccess"></div>
+          <div class="alert-box alert-error" id="adminActionError"></div>
+          <div class="alert-box alert-success" id="adminActionSuccess"></div>
 
-          <button class="btn-primary" id="btnSubmitOrder" type="button" style="width:100%;margin-top:12px;padding:14px;">
-            Finalizar Solicitação e Enviar ao CD
-          </button>
-        </div>
-      </div>
-    </section>
+          <!-- SUB-ABA 1: PEDIDOS -->
+          <div id="subtab-pedidos">
+            <div class="filter-pills">
+              <div class="filter-pills-left">
+                <button class="filter-pill active" data-filter="abertos">Pendentes / Separação</button>
+                <button class="filter-pill" data-filter="Finalizado">Finalizados</button>
+                <button class="filter-pill" data-filter="todos">Todos</button>
+              </div>
+              <button class="btn-danger-outline" id="btnLimparConcluidos" type="button" title="Remove pedidos Finalizados e Cancelados do histórico">
+                🗑 Limpar Concluídos
+              </button>
+            </div>
 
-    <!-- ABA 2: MEUS PEDIDOS (LOJA) -->
-    <section id="tab-historico" class="hidden">
-      <div class="card">
-        <div class="card-title">
-          <span>Histórico de Solicitações</span>
-          <button class="btn-secondary" id="btnReloadOrders" type="button" style="padding:6px 10px;font-size:12px;">Atualizar</button>
-        </div>
-        <div id="ordersList">
-          <div class="empty-state">Carregando histórico...</div>
-        </div>
-      </div>
-    </section>
+            <div id="adminOrdersList">
+              <div class="empty-state">Carregando pedidos...</div>
+            </div>
+          </div>
 
-    <!-- ABA 3: GESTÃO CD (BAIXA DE PEDIDOS COM PIN) -->
-    <section id="tab-gestao" class="hidden">
-      <div class="card" id="adminLockBox">
-        <div class="card-title">
-          <span>Acesso Restrito • Gestão CD</span>
-        </div>
-        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">
-          Informe o PIN administrativo para gerenciar e finalizar solicitações das lojas.
-        </p>
-        <div class="search-row">
-          <input type="password" id="adminPinInput" placeholder="Digite o PIN do Gestor..." inputmode="numeric" />
-          <button class="btn-primary" id="btnUnlockAdmin" type="button">Entrar</button>
-        </div>
-        <div class="alert-box alert-error" id="adminLockError"></div>
-      </div>
+          <!-- SUB-ABA 2: LOGINS DAS LOJAS -->
+          <div id="subtab-logins" class="hidden">
+            <div style="background:var(--bg-card-alt);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:14px;">
+              <strong style="font-size:13px;display:block;margin-bottom:10px;">Criar ou Atualizar Login de Loja</strong>
+              <div class="grid-2" style="margin-bottom:8px;">
+                <input type="text" id="novoLoginNome" placeholder="Nome (Ex: Loja 02 - Benjamim)" />
+                <input type="text" id="novoLoginPrefixo" placeholder="Prefixo (Ex: BJM)" maxlength="5" />
+              </div>
+              <div class="grid-2" style="margin-bottom:8px;">
+                <input type="text" id="novoLoginUsuario" placeholder="Usuário (Ex: benjamim)" />
+                <input type="text" id="novoLoginSenha" placeholder="Senha da loja" />
+              </div>
+              <div style="margin-bottom:8px;">
+                <input type="email" id="novoLoginEmail" placeholder="E-mail da loja para aviso de conclusão (opcional)" />
+              </div>
+              <button class="btn-primary" id="btnSalvarLoginLoja" type="button" style="width:100%;">
+                Salvar Credencial da Loja
+              </button>
+            </div>
 
-      <div class="card hidden" id="adminPanelBox">
-        <div class="card-title">
-          <span>Painel de Baixa • Centro de Distribuição</span>
-          <button class="btn-secondary" id="btnLockAdmin" type="button" style="padding:6px 10px;font-size:12px;">Bloquear</button>
-        </div>
+            <div id="adminLoginsList">
+              <div class="empty-state">Carregando logins...</div>
+            </div>
+          </div>
 
-        <div class="filter-pills">
-          <button class="filter-pill active" data-filter="abertos">Pendentes / Separação</button>
-          <button class="filter-pill" data-filter="Finalizado">Finalizados</button>
-          <button class="filter-pill" data-filter="todos">Todos</button>
-        </div>
+          <!-- SUB-ABA 3: INSUMOS INTERNOS (SACOLAS, BOBINAS, ETC.) -->
+          <div id="subtab-insumos" class="hidden">
+            <div style="background:var(--bg-card-alt);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:14px;">
+              <strong style="font-size:13px;display:block;margin-bottom:10px;">Cadastrar Insumo Interno (Fora da Shopify)</strong>
+              <div class="grid-2" style="margin-bottom:8px;">
+                <input type="text" id="novoInsumoCodigo" placeholder="Código (Ex: INS-SAC-GG)" />
+                <input type="text" id="novoInsumoUnidade" placeholder="Unidade (Ex: pct, un, cx)" />
+              </div>
+              <div style="margin-bottom:8px;">
+                <input type="text" id="novoInsumoDesc" placeholder="Descrição (Ex: Sacola Plástica GG)" />
+              </div>
+              <button class="btn-primary" id="btnSalvarInsumo" type="button" style="width:100%;">
+                Salvar Insumo
+              </button>
+            </div>
 
-        <div class="alert-box alert-error" id="adminActionError"></div>
-        <div class="alert-box alert-success" id="adminActionSuccess"></div>
-
-        <div id="adminOrdersList">
-          <div class="empty-state">Carregando pedidos...</div>
+            <div id="adminInsumosList">
+              <div class="empty-state">Carregando insumos...</div>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
-  </main>
+      </section>
+    </main>
+  </div>
 
   <footer>
     <strong>Saraiva Labs © 2026</strong> • Inteligência e Otimização de Processos Logísticos
   </footer>
 
-  <!-- MODAL SCANNER CÂMERA (OTIMIZADO ANDROID + IOS) -->
+  <!-- MODAL SCANNER CÂMERA -->
   <div class="modal-backdrop" id="scannerModal">
     <div class="modal-content">
       <div class="card-title" style="margin-bottom:0;">
@@ -822,44 +1034,21 @@
   </div>
 
   <script>
-    // Configuração Supabase (Leitura e Gravação em < 150ms)
     const SUPABASE_URL = 'https://vtykzhvwvvwmtmysczlo.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_PcYHicqZXLgO4UBDX2idfQ_OeUBtEGC';
-
-    // Endpoint Apps Script apenas para disparo do e-mail oficial em segundo plano
     const EMAIL_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxiGD9PJyhUORH1tUofiNk3GQzRKMyffh6aDiuj9N5LcRmCqiEiy7dS2pVl3v9knanT/exec';
 
-    // Suporte Multi-Loja via parâmetro ?loja= (Padrão: Loja Hortolândia)
-    const LOJAS_MAP = {
-      'hortolandia': { nome: 'Loja Hortolândia', prefixo: 'HTL' },
-      'benjamim': { nome: 'Loja 02 - Benjamim', prefixo: 'BJM' },
-      'glicerio': { nome: 'Loja 03 - Glicério', prefixo: 'GLC' },
-      'trezedemaio': { nome: 'Loja 05 - Treze de Maio', prefixo: 'TDM' },
-      'moraesbarros': { nome: 'Loja 07 - Moraes Barros', prefixo: 'MBR' },
-      'regentefeijo': { nome: 'Loja 09 - Regente Feijó', prefixo: 'RFJ' },
-      'centro': { nome: 'Loja 11 - Centro', prefixo: 'CTR' },
-      'morato': { nome: 'Loja Morato', prefixo: 'MRT' }
-    };
-
-    const paramsUrl = new URLSearchParams(window.location.search);
-    const lojaSlug = (paramsUrl.get('loja') || 'hortolandia').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
-    const LOJA_ATUAL = LOJAS_MAP[lojaSlug] || { nome: 'Loja Hortolândia', prefixo: 'HTL' };
-
-    document.getElementById('headerSubtitle').textContent = `Solicitação • ${LOJA_ATUAL.nome}`;
-    document.title = `Solicitação de Materiais • ${LOJA_ATUAL.nome} | SARAIVA LABS`;
-
+    let SESSAO_LOJA = JSON.parse(localStorage.getItem('saraiva_sessao_loja') || 'null');
     let catalogo = [];
     let mapaEAN = new Map();
     let mapaEANLimpo = new Map();
     let pedidosHistorico = [];
     let produtoSelecionado = null;
-    const cartStorageKey = `saraiva_cart_${LOJA_ATUAL.prefixo}`;
-    let carrinho = JSON.parse(localStorage.getItem(cartStorageKey) || '[]');
+    let carrinho = [];
     let html5QrCode = null;
     let adminPinSalvo = sessionStorage.getItem('saraiva_cd_pin') || '';
     let filtroAdminAtual = 'abertos';
 
-    // Helper REST Supabase com timeout de segurança e sem cache
     async function supabaseFetch(path, options = {}, timeoutMs = 8000) {
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -902,14 +1091,87 @@
       aplicarTema(atual === 'dark' ? 'light' : 'dark');
     });
 
-    // Remove qualquer Service Worker antigo que esteja interceptando o boot
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(regs => {
         regs.forEach(reg => reg.unregister());
       });
     }
 
-    // Troca de Abas
+    function mostrarAlerta(id, msg) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (!msg) {
+        el.classList.remove('open');
+        el.textContent = '';
+      } else {
+        el.textContent = msg;
+        el.classList.add('open');
+      }
+    }
+
+    // --- CONTROLE DE AUTENTICAÇÃO ---
+    function aplicarEstadoSessao() {
+      const logado = Boolean(SESSAO_LOJA && SESSAO_LOJA.nomeLoja);
+      document.getElementById('loginScreen').classList.toggle('hidden', logado);
+      document.getElementById('appContainer').classList.toggle('hidden', !logado);
+      document.getElementById('btnRefresh').classList.toggle('hidden', !logado);
+      document.getElementById('btnLogout').classList.toggle('hidden', !logado);
+
+      if (logado) {
+        document.getElementById('headerSubtitle').textContent = `Solicitação • ${SESSAO_LOJA.nomeLoja}`;
+        document.title = `Solicitação • ${SESSAO_LOJA.nomeLoja} | SARAIVA LABS`;
+        carrinho = JSON.parse(localStorage.getItem(`saraiva_cart_${SESSAO_LOJA.prefixo}`) || '[]');
+        salvarERenderizarCarrinho();
+        carregarDados();
+      } else {
+        document.getElementById('headerSubtitle').textContent = 'Portal de Solicitações CD';
+      }
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const usuario = document.getElementById('loginUsuario').value.trim();
+      const senha = document.getElementById('loginSenha').value.trim();
+      const btn = document.getElementById('btnLoginSubmit');
+
+      btn.disabled = true;
+      btn.textContent = 'Verificando credenciais...';
+      mostrarAlerta('loginError', '');
+
+      try {
+        const res = await supabaseFetch('rpc/autenticar_loja', {
+          method: 'POST',
+          body: JSON.stringify({ p_usuario: usuario, p_senha: senha })
+        });
+
+        if (!res.ok) {
+          mostrarAlerta('loginError', res.erro || 'Acesso negado.');
+          return;
+        }
+
+        SESSAO_LOJA = {
+          usuario: res.usuario,
+          nomeLoja: res.nomeLoja,
+          prefixo: res.prefixo
+        };
+        localStorage.setItem('saraiva_sessao_loja', JSON.stringify(SESSAO_LOJA));
+        document.getElementById('loginSenha').value = '';
+        aplicarEstadoSessao();
+      } catch (err) {
+        mostrarAlerta('loginError', 'Erro de conexão ao validar acesso: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Entrar no Sistema';
+      }
+    });
+
+    document.getElementById('btnLogout').addEventListener('click', () => {
+      SESSAO_LOJA = null;
+      localStorage.removeItem('saraiva_sessao_loja');
+      aplicarEstadoSessao();
+    });
+
+    // Troca de Abas Principais
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -926,32 +1188,43 @@
       return String(v || '').trim().replace(/^0+/, '');
     }
 
-    // Carregar Estoque (paginado em paralelo para superar limite de 1000 linhas por request do PostgREST) + Pedidos
+    // Carregar Estoque Shopify + Insumos Internos + Pedidos
     async function carregarDados() {
+      if (!SESSAO_LOJA) return;
       const statusEl = document.getElementById('syncStatus');
       statusEl.textContent = 'Sincronizando...';
       statusEl.classList.add('loading');
 
       try {
-        const [p1, p2, p3, p4, p5, pedidosRaw] = await Promise.all([
+        const [p1, p2, p3, p4, p5, insumosRaw, pedidosRaw] = await Promise.all([
           supabaseFetch('estoque_shopify?select=ean,ean_limpo,sku,descricao,saldo&saldo=gt.0&order=descricao.asc&limit=1000&offset=0'),
           supabaseFetch('estoque_shopify?select=ean,ean_limpo,sku,descricao,saldo&saldo=gt.0&order=descricao.asc&limit=1000&offset=1000'),
           supabaseFetch('estoque_shopify?select=ean,ean_limpo,sku,descricao,saldo&saldo=gt.0&order=descricao.asc&limit=1000&offset=2000'),
           supabaseFetch('estoque_shopify?select=ean,ean_limpo,sku,descricao,saldo&saldo=gt.0&order=descricao.asc&limit=1000&offset=3000'),
           supabaseFetch('estoque_shopify?select=ean,ean_limpo,sku,descricao,saldo&saldo=gt.0&order=descricao.asc&limit=1000&offset=4000'),
+          supabaseFetch('insumos_internos?select=codigo,descricao,unidade&ativo=eq.true&order=descricao.asc'),
           supabaseFetch('pedidos_lojas?select=*&order=data_pedido.desc&limit=1000')
         ]);
 
-        catalogo = [...p1, ...p2, ...p3, ...p4, ...p5];
+        const insumosFormatados = (insumosRaw || []).map(ins => ({
+          ean: ins.codigo,
+          ean_limpo: ins.codigo.toLowerCase(),
+          sku: ins.codigo,
+          descricao: ins.descricao,
+          saldo: 9999,
+          isInsumo: true,
+          unidade: ins.unidade || 'un'
+        }));
+
+        catalogo = [...insumosFormatados, ...p1, ...p2, ...p3, ...p4, ...p5];
 
         mapaEAN.clear();
         mapaEANLimpo.clear();
         catalogo.forEach(p => {
-          mapaEAN.set(p.ean, p);
-          mapaEANLimpo.set(p.ean_limpo || eanLimpo(p.ean), p);
+          mapaEAN.set(p.ean.toUpperCase(), p);
+          mapaEANLimpo.set((p.ean_limpo || eanLimpo(p.ean)).toUpperCase(), p);
         });
 
-        // Agrupa linhas de pedidos por numero_pedido
         const mapaPedidos = new Map();
         pedidosRaw.forEach(r => {
           if (!mapaPedidos.has(r.numero_pedido)) {
@@ -991,17 +1264,6 @@
       }
     }
 
-    function mostrarAlerta(id, msg) {
-      const el = document.getElementById(id);
-      if (!msg) {
-        el.classList.remove('open');
-        el.textContent = '';
-      } else {
-        el.textContent = msg;
-        el.classList.add('open');
-      }
-    }
-
     // Busca Manual e por EAN
     const searchInput = document.getElementById('searchInput');
     const searchResults = document.getElementById('searchResults');
@@ -1018,7 +1280,7 @@
       const termoLimpo = eanLimpo(termo);
 
       const encontrados = catalogo.filter(p =>
-        p.ean.includes(termo) ||
+        p.ean.toLowerCase().includes(termoLower) ||
         (termoLimpo && p.ean_limpo === termoLimpo) ||
         p.sku.toLowerCase().includes(termoLower) ||
         p.descricao.toLowerCase().includes(termoLower)
@@ -1036,15 +1298,15 @@
         <div class="result-item" data-ean="${p.ean}">
           <div class="result-info">
             <strong>${p.descricao}</strong>
-            <span class="result-meta">SKU: ${p.sku} • EAN: ${p.ean}</span>
+            <span class="result-meta">${p.isInsumo ? `CÓD: ${p.sku} • Insumo Interno (${p.unidade})` : `SKU: ${p.sku} • EAN: ${p.ean}`}</span>
           </div>
-          <span class="saldo-tag">CD: ${p.saldo}</span>
+          ${p.isInsumo ? `<span class="insumo-tag">INSUMO CD</span>` : `<span class="saldo-tag">CD: ${p.saldo}</span>`}
         </div>
       `).join('');
 
       searchResults.querySelectorAll('.result-item').forEach(el => {
         el.addEventListener('click', () => {
-          const prod = mapaEAN.get(el.dataset.ean);
+          const prod = mapaEAN.get(el.dataset.ean.toUpperCase());
           if (prod) selecionarProduto(prod);
         });
       });
@@ -1061,7 +1323,8 @@
 
     function buscarPorCodigoExato(codigo) {
       if (!codigo) return;
-      const prod = mapaEAN.get(codigo) || mapaEANLimpo.get(eanLimpo(codigo));
+      const up = codigo.toUpperCase();
+      const prod = mapaEAN.get(up) || mapaEANLimpo.get(eanLimpo(up).toUpperCase());
       if (prod) {
         selecionarProduto(prod);
       } else {
@@ -1076,16 +1339,26 @@
 
       const noCarrinho = carrinho.find(i => i.ean === prod.ean);
       const jaPedido = noCarrinho ? noCarrinho.quantidade : 0;
-      const disponivelRestante = prod.saldo - jaPedido;
+      const disponivelRestante = prod.isInsumo ? 9999 : (prod.saldo - jaPedido);
 
-      if (disponivelRestante <= 0) {
+      if (!prod.isInsumo && disponivelRestante <= 0) {
         mostrarAlerta('searchAlert', `Você já adicionou todo o saldo disponível (${prod.saldo}) deste item no carrinho.`);
         return;
       }
 
       document.getElementById('selDesc').textContent = prod.descricao;
-      document.getElementById('selMeta').textContent = `SKU: ${prod.sku} • EAN: ${prod.ean}`;
-      document.getElementById('selSaldo').textContent = `Saldo CD: ${disponivelRestante}`;
+      document.getElementById('selMeta').textContent = prod.isInsumo
+        ? `Código: ${prod.sku} • Unidade: ${prod.unidade}`
+        : `SKU: ${prod.sku} • EAN: ${prod.ean}`;
+
+      const saldoEl = document.getElementById('selSaldo');
+      if (prod.isInsumo) {
+        saldoEl.className = 'insumo-tag';
+        saldoEl.textContent = 'INSUMO CD';
+      } else {
+        saldoEl.className = 'saldo-tag';
+        saldoEl.textContent = `Saldo CD: ${disponivelRestante}`;
+      }
 
       const qtyInput = document.getElementById('selQty');
       qtyInput.value = 1;
@@ -1102,7 +1375,7 @@
 
     document.getElementById('btnQtyPlus').addEventListener('click', () => {
       const inp = document.getElementById('selQty');
-      const max = parseInt(inp.max, 10) || 1;
+      const max = parseInt(inp.max, 10) || 9999;
       inp.value = Math.min(max, (parseInt(inp.value, 10) || 1) + 1);
     });
 
@@ -1114,7 +1387,7 @@
     document.getElementById('btnAddCart').addEventListener('click', () => {
       if (!produtoSelecionado) return;
       const inp = document.getElementById('selQty');
-      const max = parseInt(inp.max, 10) || 1;
+      const max = parseInt(inp.max, 10) || 9999;
       const qtd = parseInt(inp.value, 10) || 0;
 
       if (qtd <= 0 || qtd > max) {
@@ -1141,16 +1414,18 @@
     });
 
     function salvarERenderizarCarrinho() {
-      localStorage.setItem(cartStorageKey, JSON.stringify(carrinho));
+      if (SESSAO_LOJA) {
+        localStorage.setItem(`saraiva_cart_${SESSAO_LOJA.prefixo}`, JSON.stringify(carrinho));
+      }
       const listEl = document.getElementById('cartList');
       const checkoutEl = document.getElementById('checkoutArea');
       const totalUn = carrinho.reduce((a, b) => a + b.quantidade, 0);
 
       document.getElementById('badgeCart').textContent = carrinho.length;
-      document.getElementById('cartSummary').textContent = `${carrinho.length} SKUs (${totalUn} un.)`;
+      document.getElementById('cartSummary').textContent = `${carrinho.length} itens (${totalUn} un.)`;
 
       if (carrinho.length === 0) {
-        listEl.innerHTML = '<div class="empty-state">Nenhum item adicionado ainda. Bipe ou busque um produto acima.</div>';
+        listEl.innerHTML = '<div class="empty-state">Nenhum item adicionado ainda. Bipe ou busque um produto ou insumo acima.</div>';
         checkoutEl.classList.add('hidden');
         return;
       }
@@ -1160,7 +1435,7 @@
         <div class="cart-item">
           <div>
             <strong style="font-size:13px;display:block;margin-bottom:3px;">${item.descricao}</strong>
-            <span class="result-meta">SKU: ${item.sku} • EAN: ${item.ean}</span>
+            <span class="result-meta">Cód/SKU: ${item.sku}</span>
           </div>
           <div class="cart-item-actions">
             <span class="saldo-tag" style="background:var(--accent-glow);color:var(--accent-light);">Qtd: ${item.quantidade}</span>
@@ -1177,9 +1452,9 @@
       });
     }
 
-    // Enviar Pedido via RPC Transacional do Supabase + Notificação E-mail em Segundo Plano
+    // Enviar Pedido
     document.getElementById('btnSubmitOrder').addEventListener('click', async () => {
-      if (carrinho.length === 0) return;
+      if (carrinho.length === 0 || !SESSAO_LOJA) return;
 
       const btn = document.getElementById('btnSubmitOrder');
       const obs = document.getElementById('obsInput').value.trim();
@@ -1192,8 +1467,8 @@
         const data = await supabaseFetch('rpc/criar_pedido_loja', {
           method: 'POST',
           body: JSON.stringify({
-            p_loja: LOJA_ATUAL.nome,
-            p_prefixo: LOJA_ATUAL.prefixo,
+            p_loja: SESSAO_LOJA.nomeLoja,
+            p_prefixo: SESSAO_LOJA.prefixo,
             p_observacao: obs,
             p_itens: carrinho
           })
@@ -1208,7 +1483,6 @@
           return;
         }
 
-        // Dispara o e-mail pelo Apps Script em segundo plano sem travar a UI
         const agoraFmt = new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
         fetch(EMAIL_WEBHOOK_URL, {
           method: 'POST',
@@ -1217,7 +1491,7 @@
           body: JSON.stringify({
             action: 'notificar_pedido',
             numeroPedido: data.numeroPedido,
-            loja: LOJA_ATUAL.nome,
+            loja: SESSAO_LOJA.nomeLoja,
             dataHora: agoraFmt,
             itens: data.itensValidados || carrinho,
             observacao: obs
@@ -1245,10 +1519,10 @@
       return 'st-pendente';
     }
 
-    // Histórico da Loja
     function renderizarPedidos() {
+      if (!SESSAO_LOJA) return;
       const container = document.getElementById('ordersList');
-      const pedidosDaLoja = pedidosHistorico.filter(p => p.loja === LOJA_ATUAL.nome);
+      const pedidosDaLoja = pedidosHistorico.filter(p => p.loja === SESSAO_LOJA.nomeLoja);
       document.getElementById('badgeOrders').textContent = pedidosDaLoja.length;
 
       if (pedidosDaLoja.length === 0) {
@@ -1261,7 +1535,7 @@
           <div class="order-line">
             <div>
               <strong>${i.descricao}</strong><br/>
-              <span class="result-meta">SKU: ${i.sku} • EAN: ${i.ean}</span>
+              <span class="result-meta">Cód/SKU: ${i.sku}</span>
             </div>
             <strong style="color:var(--accent-light);white-space:nowrap;">${i.quantidade} un.</strong>
           </div>
@@ -1272,7 +1546,7 @@
             <div class="order-header" onclick="this.parentElement.classList.toggle('expanded')">
               <div>
                 <strong style="font-size:14px;display:block;">${p.numeroPedido}</strong>
-                <span class="result-meta">${p.data} • ${p.totalItens} SKUs (${p.totalUnidades} un.)</span>
+                <span class="result-meta">${p.data} • ${p.totalItens} itens (${p.totalUnidades} un.)</span>
               </div>
               <span class="badge-status ${classeStatus(p.status)}">${p.status}</span>
             </div>
@@ -1282,12 +1556,16 @@
       }).join('');
     }
 
-    // --- MÓDULO GESTÃO CD (PIN + BAIXA RÁPIDA) ---
+    // --- MÓDULO GESTÃO CD ---
     function verificarEstadoAdmin() {
       const unlocked = Boolean(adminPinSalvo);
       document.getElementById('adminLockBox').classList.toggle('hidden', unlocked);
       document.getElementById('adminPanelBox').classList.toggle('hidden', !unlocked);
-      if (unlocked) renderizarPedidosAdmin();
+      if (unlocked) {
+        renderizarPedidosAdmin();
+        carregarLoginsAdmin();
+        carregarInsumosAdmin();
+      }
     }
 
     document.getElementById('btnUnlockAdmin').addEventListener('click', () => {
@@ -1307,6 +1585,18 @@
       adminPinSalvo = '';
       sessionStorage.removeItem('saraiva_cd_pin');
       verificarEstadoAdmin();
+    });
+
+    // Sub-abas do Gestor CD
+    document.querySelectorAll('.admin-subtab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.admin-subtab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const sub = btn.dataset.subtab;
+        document.getElementById('subtab-pedidos').classList.toggle('hidden', sub !== 'pedidos');
+        document.getElementById('subtab-logins').classList.toggle('hidden', sub !== 'logins');
+        document.getElementById('subtab-insumos').classList.toggle('hidden', sub !== 'insumos');
+      });
     });
 
     document.querySelectorAll('.filter-pill').forEach(pill => {
@@ -1338,7 +1628,7 @@
           <div class="order-line">
             <div>
               <strong>${i.descricao}</strong><br/>
-              <span class="result-meta">SKU: ${i.sku} • EAN: ${i.ean}</span>
+              <span class="result-meta">Cód/SKU: ${i.sku}</span>
             </div>
             <strong style="color:var(--accent-light);white-space:nowrap;">${i.quantidade} un.</strong>
           </div>
@@ -1349,7 +1639,7 @@
             <div class="order-header" onclick="this.parentElement.classList.toggle('expanded')">
               <div>
                 <strong style="font-size:14px;display:block;">${p.numeroPedido} • ${p.loja}</strong>
-                <span class="result-meta">${p.data} • ${p.totalItens} SKUs (${p.totalUnidades} un.)</span>
+                <span class="result-meta">${p.data} • ${p.totalItens} itens (${p.totalUnidades} un.)</span>
               </div>
               <span class="badge-status ${classeStatus(p.status)}">${p.status}</span>
             </div>
@@ -1383,6 +1673,8 @@
       btnEl.disabled = true;
       btnEl.textContent = 'Salvando...';
 
+      const pedidoAlvo = pedidosHistorico.find(p => p.numeroPedido === numeroPedido);
+
       try {
         const data = await supabaseFetch('rpc/atualizar_status_pedido_cd', {
           method: 'POST',
@@ -1405,7 +1697,28 @@
           return;
         }
 
-        mostrarAlerta('adminActionSuccess', `Pedido ${numeroPedido} atualizado para "${novoStatus}".`);
+        // Dispara e-mail de aviso para a loja se o status for Finalizado e houver e-mail cadastrado
+        if (novoStatus === 'Finalizado' && data.emailLoja && pedidoAlvo) {
+          const agoraFmt = new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+          fetch(EMAIL_WEBHOOK_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'notificar_conclusao',
+              emailLoja: data.emailLoja,
+              numeroPedido: numeroPedido,
+              loja: data.loja || pedidoAlvo.loja,
+              dataHora: agoraFmt,
+              itens: pedidoAlvo.itens
+            })
+          }).catch(() => {});
+        }
+
+        const avisoEmail = (novoStatus === 'Finalizado' && data.emailLoja)
+          ? ` E-mail de conclusão enviado para ${data.emailLoja}.`
+          : '';
+        mostrarAlerta('adminActionSuccess', `Pedido ${numeroPedido} atualizado para "${novoStatus}".${avisoEmail}`);
         await carregarDados();
       } catch (err) {
         mostrarAlerta('adminActionError', 'Falha de comunicação: ' + err.message);
@@ -1415,7 +1728,181 @@
       }
     }
 
-    // --- SCANNER DE CÓDIGO DE BARRAS OTIMIZADO PARA IOS (IPHONE) E ANDROID ---
+    // Limpar Histórico de Pedidos Concluídos
+    document.getElementById('btnLimparConcluidos').addEventListener('click', async () => {
+      if (!confirm('Deseja realmente apagar todos os pedidos já Finalizados e Cancelados do histórico? Os pedidos Pendentes e Em Separação serão mantidos.')) {
+        return;
+      }
+      mostrarAlerta('adminActionError', '');
+      mostrarAlerta('adminActionSuccess', '');
+
+      try {
+        const res = await supabaseFetch('rpc/limpar_pedidos_concluidos_cd', {
+          method: 'POST',
+          body: JSON.stringify({ p_pin: adminPinSalvo })
+        });
+
+        if (!res.ok) {
+          mostrarAlerta('adminActionError', res.erro || 'Erro ao limpar histórico.');
+          return;
+        }
+
+        mostrarAlerta('adminActionSuccess', 'Histórico de pedidos concluídos limpo com sucesso.');
+        await carregarDados();
+      } catch (err) {
+        mostrarAlerta('adminActionError', 'Erro de comunicação: ' + err.message);
+      }
+    });
+
+    // Gerenciar Logins das Lojas
+    async function carregarLoginsAdmin() {
+      const listEl = document.getElementById('adminLoginsList');
+      try {
+        const res = await supabaseFetch('rpc/gerenciar_acesso_loja_cd', {
+          method: 'POST',
+          body: JSON.stringify({ p_pin: adminPinSalvo, p_acao: 'listar', p_usuario: '' })
+        });
+        if (!res.ok) {
+          if (String(res.erro).includes('PIN')) {
+            adminPinSalvo = '';
+            sessionStorage.removeItem('saraiva_cd_pin');
+            verificarEstadoAdmin();
+            mostrarAlerta('adminLockError', res.erro);
+          }
+          return;
+        }
+        listEl.innerHTML = (res.acessos || []).map(a => `
+          <div class="manage-row">
+            <div>
+              <strong style="font-size:13px;display:block;">${a.nomeLoja} (${a.prefixo})</strong>
+              <span class="result-meta">Usuário: ${a.usuario} ${a.emailLoja ? '• ' + a.emailLoja : ''} • ${a.ativo ? 'Ativo' : 'Bloqueado'}</span>
+            </div>
+            <button class="${a.ativo ? 'btn-danger-outline' : 'btn-success'}" onclick="alternarLoginLoja('${a.usuario}')">
+              ${a.ativo ? 'Bloquear' : 'Ativar'}
+            </button>
+          </div>
+        `).join('') || '<div class="empty-state">Nenhum login cadastrado.</div>';
+      } catch (err) {
+        listEl.innerHTML = '<div class="empty-state">Erro ao carregar logins.</div>';
+      }
+    }
+
+    document.getElementById('btnSalvarLoginLoja').addEventListener('click', async () => {
+      const nome = document.getElementById('novoLoginNome').value.trim();
+      const prefixo = document.getElementById('novoLoginPrefixo').value.trim();
+      const usuario = document.getElementById('novoLoginUsuario').value.trim();
+      const senha = document.getElementById('novoLoginSenha').value.trim();
+      const email = document.getElementById('novoLoginEmail').value.trim();
+
+      if (!nome || !prefixo || !usuario) {
+        mostrarAlerta('adminActionError', 'Preencha Nome da Loja, Prefixo e Usuário.');
+        return;
+      }
+
+      const res = await supabaseFetch('rpc/gerenciar_acesso_loja_cd', {
+        method: 'POST',
+        body: JSON.stringify({
+          p_pin: adminPinSalvo,
+          p_acao: 'salvar',
+          p_usuario: usuario,
+          p_senha: senha,
+          p_nome_loja: nome,
+          p_prefixo: prefixo,
+          p_email_loja: email
+        })
+      });
+
+      if (!res.ok) {
+        mostrarAlerta('adminActionError', res.erro || 'Erro ao salvar login.');
+        return;
+      }
+
+      document.getElementById('novoLoginNome').value = '';
+      document.getElementById('novoLoginPrefixo').value = '';
+      document.getElementById('novoLoginUsuario').value = '';
+      document.getElementById('novoLoginSenha').value = '';
+      document.getElementById('novoLoginEmail').value = '';
+      mostrarAlerta('adminActionSuccess', `Credencial da loja "${nome}" salva com sucesso!`);
+      carregarLoginsAdmin();
+    });
+
+    async function alternarLoginLoja(usuario) {
+      await supabaseFetch('rpc/gerenciar_acesso_loja_cd', {
+        method: 'POST',
+        body: JSON.stringify({ p_pin: adminPinSalvo, p_acao: 'toggle', p_usuario: usuario })
+      });
+      carregarLoginsAdmin();
+    }
+
+    // Gerenciar Insumos Internos
+    async function carregarInsumosAdmin() {
+      const listEl = document.getElementById('adminInsumosList');
+      try {
+        const res = await supabaseFetch('rpc/gerenciar_insumo_cd', {
+          method: 'POST',
+          body: JSON.stringify({ p_pin: adminPinSalvo, p_acao: 'listar' })
+        });
+        if (!res.ok) return;
+        listEl.innerHTML = (res.insumos || []).map(i => `
+          <div class="manage-row">
+            <div>
+              <strong style="font-size:13px;display:block;">${i.descricao}</strong>
+              <span class="result-meta">Código: ${i.codigo} • Unid: ${i.unidade} • ${i.ativo ? 'Ativo' : 'Inativo'}</span>
+            </div>
+            <button class="${i.ativo ? 'btn-danger-outline' : 'btn-success'}" onclick="alternarInsumo('${i.codigo}')">
+              ${i.ativo ? 'Desativar' : 'Ativar'}
+            </button>
+          </div>
+        `).join('') || '<div class="empty-state">Nenhum insumo interno cadastrado.</div>';
+      } catch (err) {
+        listEl.innerHTML = '<div class="empty-state">Erro ao carregar insumos.</div>';
+      }
+    }
+
+    document.getElementById('btnSalvarInsumo').addEventListener('click', async () => {
+      const codigo = document.getElementById('novoInsumoCodigo').value.trim();
+      const unidade = document.getElementById('novoInsumoUnidade').value.trim() || 'un';
+      const descricao = document.getElementById('novoInsumoDesc').value.trim();
+
+      if (!codigo || !descricao) {
+        mostrarAlerta('adminActionError', 'Preencha Código e Descrição do insumo.');
+        return;
+      }
+
+      const res = await supabaseFetch('rpc/gerenciar_insumo_cd', {
+        method: 'POST',
+        body: JSON.stringify({
+          p_pin: adminPinSalvo,
+          p_acao: 'salvar',
+          p_codigo: codigo,
+          p_descricao: descricao,
+          p_unidade: unidade
+        })
+      });
+
+      if (!res.ok) {
+        mostrarAlerta('adminActionError', res.erro || 'Erro ao salvar insumo.');
+        return;
+      }
+
+      document.getElementById('novoInsumoCodigo').value = '';
+      document.getElementById('novoInsumoUnidade').value = '';
+      document.getElementById('novoInsumoDesc').value = '';
+      mostrarAlerta('adminActionSuccess', `Insumo "${descricao}" salvo e liberado para as lojas!`);
+      carregarInsumosAdmin();
+      carregarDados();
+    });
+
+    async function alternarInsumo(codigo) {
+      await supabaseFetch('rpc/gerenciar_insumo_cd', {
+        method: 'POST',
+        body: JSON.stringify({ p_pin: adminPinSalvo, p_acao: 'toggle', p_codigo: codigo })
+      });
+      carregarInsumosAdmin();
+      carregarDados();
+    }
+
+    // Scanner
     function criarInstanciaScanner() {
       const formatos1D = typeof Html5QrcodeSupportedFormats !== 'undefined'
         ? [
@@ -1471,7 +1958,6 @@
       });
     });
 
-    // Plano B infalível para iPhone/iOS: leitura direta pela foto da câmera nativa
     document.getElementById('barcodeFileInput').addEventListener('change', async (e) => {
       const file = e.target.files && e.target.files[0];
       if (!file) return;
@@ -1505,12 +1991,11 @@
     document.getElementById('btnRefresh').addEventListener('click', () => carregarDados());
     document.getElementById('btnReloadOrders').addEventListener('click', () => carregarDados());
 
-    // Boot direto + re-sincronização automática ao voltar para o app
-    salvarERenderizarCarrinho();
-    carregarDados();
+    // Boot
+    aplicarEstadoSessao();
 
     document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') {
+      if (document.visibilityState === 'visible' && SESSAO_LOJA) {
         carregarDados();
       }
     });
