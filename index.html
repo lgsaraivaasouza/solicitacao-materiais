@@ -1486,9 +1486,23 @@
     document.getElementById('btnRefresh').addEventListener('click', () => carregarDados());
     document.getElementById('btnReloadOrders').addEventListener('click', () => carregarDados());
 
-    // Boot
-    salvarERenderCarrinho();
-    carregarDados();
+    /// Boot seguro + re-sincronização automática ao voltar para o app
+    function iniciarApp() {
+      salvarERenderCarrinho();
+      carregarDados();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', iniciarApp);
+    } else {
+      iniciarApp();
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        carregarDados();
+      }
+    });
   </script>
 </body>
 </html>
