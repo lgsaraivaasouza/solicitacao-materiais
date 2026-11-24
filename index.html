@@ -26,7 +26,6 @@
       --radius-sm: 10px;
     }
 
-    /* Tema Escuro Padrão SARAIVA LABS */
     [data-theme="dark"] {
       color-scheme: dark;
       --bg-page: #1E293B;
@@ -41,7 +40,6 @@
       --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.45);
     }
 
-    /* Tema Claro Alternativo */
     [data-theme="light"] {
       color-scheme: light;
       --bg-page: #EEF2F6;
@@ -68,7 +66,6 @@
       transition: background-color 0.25s ease, color 0.25s ease;
     }
 
-    /* Header */
     header {
       background-color: var(--bg-header);
       border-bottom: 2px solid var(--accent);
@@ -148,14 +145,14 @@
       color: var(--accent-light);
     }
 
-    /* Navegação por Abas */
+    /* Navegação por 3 Abas */
     .tabs {
       max-width: 780px;
       width: 100%;
       margin: 14px auto 0;
       padding: 0 14px;
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr auto;
       gap: 8px;
     }
 
@@ -163,7 +160,7 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       color: var(--text-muted);
-      padding: 11px 14px;
+      padding: 11px 12px;
       border-radius: var(--radius-sm);
       font-family: var(--font-heading);
       font-weight: 700;
@@ -172,7 +169,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
       transition: all 0.2s ease;
     }
 
@@ -197,7 +194,6 @@
       color: var(--accent-light);
     }
 
-    /* Container Principal */
     main {
       max-width: 780px;
       width: 100%;
@@ -242,7 +238,6 @@
       border-color: rgba(245, 158, 11, 0.3);
     }
 
-    /* Barra de Busca + Botão Câmera */
     .search-row {
       display: flex;
       gap: 8px;
@@ -253,7 +248,7 @@
       flex: 1;
     }
 
-    input[type="text"], input[type="number"], textarea {
+    input[type="text"], input[type="number"], input[type="password"], textarea {
       width: 100%;
       background: var(--bg-input);
       border: 1px solid var(--border);
@@ -304,13 +299,48 @@
       cursor: pointer;
     }
 
+    .btn-success {
+      background: #059669;
+      color: #FFFFFF;
+      border: none;
+      padding: 9px 14px;
+      border-radius: 8px;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .btn-info {
+      background: #2563EB;
+      color: #FFFFFF;
+      border: none;
+      padding: 9px 14px;
+      border-radius: 8px;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .btn-danger-outline {
+      background: rgba(239, 68, 68, 0.12);
+      color: #F87171;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
     .btn-scan {
       padding: 0 16px;
       white-space: nowrap;
       flex-shrink: 0;
     }
 
-    /* Resultados da Busca */
     .search-results {
       margin-top: 10px;
       max-height: 280px;
@@ -360,7 +390,6 @@
       white-space: nowrap;
     }
 
-    /* Card de Produto Selecionado */
     .selected-box {
       margin-top: 14px;
       padding: 14px;
@@ -412,7 +441,6 @@
       padding: 8px !important;
     }
 
-    /* Carrinho */
     .cart-list {
       display: flex;
       flex-direction: column;
@@ -455,7 +483,6 @@
       font-size: 13px;
     }
 
-    /* Alertas */
     .alert-box {
       padding: 12px 14px;
       border-radius: var(--radius-sm);
@@ -481,7 +508,6 @@
     }
     [data-theme="light"] .alert-success { color: #065F46; }
 
-    /* Modal Scanner */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -512,7 +538,6 @@
       margin: 12px 0;
     }
 
-    /* Histórico de Pedidos */
     .order-card {
       background: var(--bg-card-alt);
       border: 1px solid var(--border);
@@ -534,7 +559,7 @@
 
     .order-body {
       display: none;
-      padding: 0 14px 12px;
+      padding: 0 14px 14px;
       border-top: 1px solid var(--border);
     }
 
@@ -551,19 +576,53 @@
 
     .order-line:last-child { border-bottom: none; }
 
+    .admin-actions-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .filter-pill {
+      padding: 6px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--bg-card-alt);
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .filter-pill.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #FFFFFF;
+    }
+
     .badge-status {
       font-size: 11px;
       font-weight: 700;
       padding: 4px 9px;
       border-radius: 999px;
       text-transform: uppercase;
+      white-space: nowrap;
     }
 
     .st-pendente { background: rgba(245, 158, 11, 0.16); color: #FBBF24; }
     .st-separacao { background: rgba(59, 130, 246, 0.16); color: #60A5FA; }
-    .st-enviado { background: rgba(16, 185, 129, 0.16); color: #34D399; }
+    .st-finalizado { background: rgba(16, 185, 129, 0.16); color: #34D399; }
+    .st-cancelado { background: rgba(239, 68, 68, 0.16); color: #F87171; }
 
-    /* Footbar Oficial SARAIVA LABS */
     footer {
       background-color: var(--bg-header);
       border-top: 1px solid #334155;
@@ -610,6 +669,9 @@
     </button>
     <button class="tab-btn" data-tab="historico">
       Meus Pedidos <span class="badge-count" id="badgeOrders">0</span>
+    </button>
+    <button class="tab-btn" data-tab="gestao" title="Acesso restrito ao Gestor do CD">
+      🔒 CD
     </button>
   </nav>
 
@@ -684,7 +746,7 @@
       </div>
     </section>
 
-    <!-- ABA 2: MEUS PEDIDOS -->
+    <!-- ABA 2: MEUS PEDIDOS (LOJA) -->
     <section id="tab-historico" class="hidden">
       <div class="card">
         <div class="card-title">
@@ -693,6 +755,45 @@
         </div>
         <div id="ordersList">
           <div class="empty-state">Carregando histórico...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABA 3: GESTÃO CD (BAIXA DE PEDIDOS COM PIN) -->
+    <section id="tab-gestao" class="hidden">
+      <!-- Tela de Bloqueio PIN -->
+      <div class="card" id="adminLockBox">
+        <div class="card-title">
+          <span>Acesso Restrito • Gestão CD</span>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">
+          Informe o PIN administrativo para gerenciar e finalizar solicitações das lojas.
+        </p>
+        <div class="search-row">
+          <input type="password" id="adminPinInput" placeholder="Digite o PIN do Gestor..." inputmode="numeric" />
+          <button class="btn-primary" id="btnUnlockAdmin" type="button">Entrar</button>
+        </div>
+        <div class="alert-box alert-error" id="adminLockError"></div>
+      </div>
+
+      <!-- Painel Desbloqueado -->
+      <div class="card hidden" id="adminPanelBox">
+        <div class="card-title">
+          <span>Painel de Baixa • Centro de Distribuição</span>
+          <button class="btn-secondary" id="btnLockAdmin" type="button" style="padding:6px 10px;font-size:12px;">Bloquear</button>
+        </div>
+
+        <div class="filter-pills">
+          <button class="filter-pill active" data-filter="abertos">Pendentes / Separação</button>
+          <button class="filter-pill" data-filter="Finalizado">Finalizados</button>
+          <button class="filter-pill" data-filter="todos">Todos</button>
+        </div>
+
+        <div class="alert-box alert-error" id="adminActionError"></div>
+        <div class="alert-box alert-success" id="adminActionSuccess"></div>
+
+        <div id="adminOrdersList">
+          <div class="empty-state">Carregando pedidos...</div>
         </div>
       </div>
     </section>
@@ -726,8 +827,10 @@
     let produtoSelecionado = null;
     let carrinho = JSON.parse(localStorage.getItem('saraiva_cart_htl') || '[]');
     let html5QrCode = null;
+    let adminPinSalvo = sessionStorage.getItem('saraiva_cd_pin') || '';
+    let filtroAdminAtual = 'abertos';
 
-    // Inicialização de Tema
+    // Tema
     const savedTheme = localStorage.getItem('saraiva_theme') || 'dark';
     aplicarTema(savedTheme);
 
@@ -742,7 +845,6 @@
       aplicarTema(atual === 'dark' ? 'light' : 'dark');
     });
 
-    // Registro do Service Worker (PWA)
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(() => {});
     }
@@ -755,15 +857,16 @@
         const tab = btn.dataset.tab;
         document.getElementById('tab-nova').classList.toggle('hidden', tab !== 'nova');
         document.getElementById('tab-historico').classList.toggle('hidden', tab !== 'historico');
+        document.getElementById('tab-gestao').classList.toggle('hidden', tab !== 'gestao');
+
+        if (tab === 'gestao') verificarEstadoAdmin();
       });
     });
 
-    // Normalização EAN
     function eanLimpo(v) {
       return String(v || '').trim().replace(/^0+/, '');
     }
 
-    // Carregar Dados da API
     async function carregarDados(forceRefresh = false) {
       const statusEl = document.getElementById('syncStatus');
       statusEl.textContent = 'Sincronizando CD...';
@@ -789,6 +892,7 @@
         statusEl.textContent = `${catalogo.length} itens disponíveis`;
         statusEl.classList.remove('loading');
         renderizarPedidos();
+        renderizarPedidosAdmin();
       } catch (err) {
         statusEl.textContent = 'Erro de conexão';
         mostrarAlerta('searchAlert', 'Não foi possível conectar ao estoque do CD: ' + err.message);
@@ -856,7 +960,6 @@
       searchResults.classList.add('open');
     });
 
-    // Enter direto no campo de busca (útil para digitação rápida de EAN)
     searchInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
@@ -879,7 +982,6 @@
       searchResults.classList.remove('open');
       mostrarAlerta('searchAlert', '');
 
-      // Verifica quanto já tem no carrinho para descontar do limite máximo
       const noCarrinho = carrinho.find(i => i.ean === prod.ean);
       const jaPedido = noCarrinho ? noCarrinho.quantidade : 0;
       const disponivelRestante = prod.saldo - jaPedido;
@@ -903,15 +1005,13 @@
 
     document.getElementById('btnQtyMinus').addEventListener('click', () => {
       const inp = document.getElementById('selQty');
-      const v = Math.max(1, (parseInt(inp.value, 10) || 1) - 1);
-      inp.value = v;
+      inp.value = Math.max(1, (parseInt(inp.value, 10) || 1) - 1);
     });
 
     document.getElementById('btnQtyPlus').addEventListener('click', () => {
       const inp = document.getElementById('selQty');
       const max = parseInt(inp.max, 10) || 1;
-      const v = Math.min(max, (parseInt(inp.value, 10) || 1) + 1);
-      inp.value = v;
+      inp.value = Math.min(max, (parseInt(inp.value, 10) || 1) + 1);
     });
 
     document.getElementById('btnCancelSel').addEventListener('click', () => {
@@ -1029,7 +1129,15 @@
       }
     });
 
-    // Renderizar Histórico
+    function classeStatus(st) {
+      const s = String(st || '').toLowerCase();
+      if (s.includes('finalizado') || s.includes('enviado')) return 'st-finalizado';
+      if (s.includes('separa')) return 'st-separacao';
+      if (s.includes('cancel')) return 'st-cancelado';
+      return 'st-pendente';
+    }
+
+    // Renderizar Histórico (Loja)
     function renderizarPedidos() {
       const container = document.getElementById('ordersList');
       document.getElementById('badgeOrders').textContent = pedidosHistorico.length;
@@ -1040,8 +1148,6 @@
       }
 
       container.innerHTML = pedidosHistorico.map(p => {
-        const stLower = p.status.toLowerCase();
-        const stClass = stLower.includes('enviado') ? 'st-enviado' : stLower.includes('separa') ? 'st-separacao' : 'st-pendente';
         const linhas = p.itens.map(i => `
           <div class="order-line">
             <div>
@@ -1059,12 +1165,148 @@
                 <strong style="font-size:14px;display:block;">${p.numeroPedido}</strong>
                 <span class="result-meta">${p.data} • ${p.totalItens} SKUs (${p.totalUnidades} un.)</span>
               </div>
-              <span class="badge-status ${stClass}">${p.status}</span>
+              <span class="badge-status ${classeStatus(p.status)}">${p.status}</span>
             </div>
             <div class="order-body">${linhas}</div>
           </div>
         `;
       }).join('');
+    }
+
+    // --- MÓDULO GESTÃO CD (PIN + BAIXA RÁPIDA) ---
+    function verificarEstadoAdmin() {
+      const unlocked = Boolean(adminPinSalvo);
+      document.getElementById('adminLockBox').classList.toggle('hidden', unlocked);
+      document.getElementById('adminPanelBox').classList.toggle('hidden', !unlocked);
+      if (unlocked) renderizarPedidosAdmin();
+    }
+
+    document.getElementById('btnUnlockAdmin').addEventListener('click', () => {
+      const pin = document.getElementById('adminPinInput').value.trim();
+      if (!pin) {
+        mostrarAlerta('adminLockError', 'Digite o PIN do Gestor CD.');
+        return;
+      }
+      adminPinSalvo = pin;
+      sessionStorage.setItem('saraiva_cd_pin', pin);
+      document.getElementById('adminPinInput').value = '';
+      mostrarAlerta('adminLockError', '');
+      verificarEstadoAdmin();
+    });
+
+    document.getElementById('btnLockAdmin').addEventListener('click', () => {
+      adminPinSalvo = '';
+      sessionStorage.removeItem('saraiva_cd_pin');
+      verificarEstadoAdmin();
+    });
+
+    document.querySelectorAll('.filter-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        filtroAdminAtual = pill.dataset.filter;
+        renderizarPedidosAdmin();
+      });
+    });
+
+    function renderizarPedidosAdmin() {
+      const container = document.getElementById('adminOrdersList');
+      if (!container) return;
+
+      const filtrados = pedidosHistorico.filter(p => {
+        if (filtroAdminAtual === 'todos') return true;
+        if (filtroAdminAtual === 'abertos') return p.status === 'Pendente' || p.status === 'Em Separação';
+        return p.status === filtroAdminAtual;
+      });
+
+      if (filtrados.length === 0) {
+        container.innerHTML = '<div class="empty-state">Nenhum pedido encontrado neste filtro.</div>';
+        return;
+      }
+
+      container.innerHTML = filtrados.map(p => {
+        const linhas = p.itens.map(i => `
+          <div class="order-line">
+            <div>
+              <strong>${i.descricao}</strong><br/>
+              <span class="result-meta">SKU: ${i.sku} • EAN: ${i.ean}</span>
+            </div>
+            <strong style="color:var(--accent-light);white-space:nowrap;">${i.quantidade} un.</strong>
+          </div>
+        `).join('');
+
+        return `
+          <div class="order-card expanded">
+            <div class="order-header" onclick="this.parentElement.classList.toggle('expanded')">
+              <div>
+                <strong style="font-size:14px;display:block;">${p.numeroPedido}</strong>
+                <span class="result-meta">${p.data} • ${p.totalItens} SKUs (${p.totalUnidades} un.)</span>
+              </div>
+              <span class="badge-status ${classeStatus(p.status)}">${p.status}</span>
+            </div>
+            <div class="order-body">
+              ${linhas}
+              <div class="admin-actions-bar">
+                ${p.status !== 'Em Separação' && p.status !== 'Finalizado' ? `
+                  <button class="btn-info" onclick="alterarStatusPedido('${p.numeroPedido}', 'Em Separação', this)">
+                    Em Separação
+                  </button>` : ''}
+                ${p.status !== 'Finalizado' ? `
+                  <button class="btn-success" onclick="alterarStatusPedido('${p.numeroPedido}', 'Finalizado', this)">
+                    ✓ Finalizar Pedido
+                  </button>` : ''}
+                ${p.status !== 'Cancelado' && p.status !== 'Finalizado' ? `
+                  <button class="btn-danger-outline" onclick="alterarStatusPedido('${p.numeroPedido}', 'Cancelado', this)">
+                    Cancelar
+                  </button>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function alterarStatusPedido(numeroPedido, novoStatus, btnEl) {
+      mostrarAlerta('adminActionError', '');
+      mostrarAlerta('adminActionSuccess', '');
+      const textoOriginal = btnEl.textContent;
+      btnEl.disabled = true;
+      btnEl.textContent = 'Salvando...';
+
+      try {
+        const resp = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'atualizar_status',
+            numeroPedido: numeroPedido,
+            novoStatus: novoStatus,
+            pin: adminPinSalvo
+          })
+        });
+
+        const data = await resp.json();
+
+        if (!data.ok) {
+          if (String(data.erro).includes('PIN')) {
+            adminPinSalvo = '';
+            sessionStorage.removeItem('saraiva_cd_pin');
+            verificarEstadoAdmin();
+            mostrarAlerta('adminLockError', data.erro);
+          } else {
+            mostrarAlerta('adminActionError', data.erro || 'Erro ao atualizar status.');
+          }
+          return;
+        }
+
+        mostrarAlerta('adminActionSuccess', `Pedido ${numeroPedido} atualizado para "${novoStatus}".`);
+        await carregarDados(false);
+      } catch (err) {
+        mostrarAlerta('adminActionError', 'Falha de comunicação: ' + err.message);
+      } finally {
+        btnEl.disabled = false;
+        btnEl.textContent = textoOriginal;
+      }
     }
 
     // Scanner de Código de Barras pela Câmera
@@ -1098,7 +1340,7 @@
     document.getElementById('btnReloadOrders').addEventListener('click', () => carregarDados(true));
 
     // Boot
-    salvarERenderizarCarrinho();
+    salvarERenderCarrinho();
     carregarDados(false);
   </script>
 </body>
