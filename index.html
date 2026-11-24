@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" defer></script>
   <style>
     :root {
       --font-heading: 'Plus Jakarta Sans', sans-serif;
@@ -859,20 +859,32 @@
     let adminPinSalvo = sessionStorage.getItem('saraiva_cd_pin') || '';
     let filtroAdminAtual = 'abertos';
 
-    // Helper REST Supabase
-    async function supabaseFetch(path, options = {}) {
-      const headers = {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Content-Type': 'application/json',
-        ...(options.headers || {})
-      };
-      const resp = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, { ...options, headers });
-      if (!resp.ok) {
-        const txt = await resp.text();
-        throw new Error(txt || `Erro HTTP ${resp.status}`);
+    // Helper REST Supabase com timeout de segurança e sem cache
+    async function supabaseFetch(path, options = {}, timeoutMs = 8000) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+      try {
+        const headers = {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          ...(options.headers || {})
+        };
+        const resp = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+          ...options,
+          headers,
+          signal: controller.signal,
+          cache: 'no-store'
+        });
+        if (!resp.ok) {
+          const txt = await resp.text();
+          throw new Error(txt || `Erro HTTP ${resp.status}`);
+        }
+        return resp.json();
+      } finally {
+        clearTimeout(timer);
       }
-      return resp.json();
     }
 
     // Tema
@@ -890,8 +902,11 @@
       aplicarTema(atual === 'dark' ? 'light' : 'dark');
     });
 
+    // Remove qualquer Service Worker antigo que esteja interceptando o boot
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').catch(() => {});
+      navigator.serviceWorker.getRegistrations().then(regs => {
+        regs.forEach(reg => reg.unregister());
+      });
     }
 
     // Troca de Abas
@@ -1486,7 +1501,7 @@
     document.getElementById('btnRefresh').addEventListener('click', () => carregarDados());
     document.getElementById('btnReloadOrders').addEventListener('click', () => carregarDados());
 
-    /// Boot seguro + re-sincronização automática ao voltar para o app
+    // Boot seguro + re-sincronização automática ao voltar para o app
     function iniciarApp() {
       salvarERenderCarrinho();
       carregarDados();
