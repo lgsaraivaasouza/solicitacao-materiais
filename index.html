@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" defer></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" async></script>
   <style>
     :root {
       --font-heading: 'Plus Jakarta Sans', sans-serif;
@@ -1435,6 +1435,10 @@
     }
 
     document.getElementById('btnOpenScanner').addEventListener('click', () => {
+      if (typeof Html5Qrcode === 'undefined') {
+        mostrarAlerta('searchAlert', 'Leitor ainda carregando. Aguarde 1 segundo ou use o botão "Ler por Foto".');
+        return;
+      }
       document.getElementById('scannerModal').classList.add('open');
       html5QrCode = criarInstanciaScanner();
 
@@ -1462,7 +1466,7 @@
           fecharScanner();
           buscarPorCodigoExato(decodedText.trim());
         }
-      ).catch(err => {
+      ).catch(() => {
         mostrarAlerta('searchAlert', 'Câmera ao vivo indisponível neste navegador. Use o botão "Ler por Foto" ou digite o EAN.');
       });
     });
@@ -1501,17 +1505,9 @@
     document.getElementById('btnRefresh').addEventListener('click', () => carregarDados());
     document.getElementById('btnReloadOrders').addEventListener('click', () => carregarDados());
 
-    // Boot seguro + re-sincronização automática ao voltar para o app
-    function iniciarApp() {
-      salvarERenderCarrinho();
-      carregarDados();
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', iniciarApp);
-    } else {
-      iniciarApp();
-    }
+    // Boot direto + re-sincronização automática ao voltar para o app
+    salvarERenderCarrinho();
+    carregarDados();
 
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
