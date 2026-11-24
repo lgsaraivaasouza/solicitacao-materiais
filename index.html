@@ -93,16 +93,14 @@
       gap: 10px;
     }
 
-    .brand-icon {
-      width: 38px;
-      height: 38px;
+   .brand-logo {
+      width: 40px;
+      height: 40px;
       border-radius: 10px;
-      background: linear-gradient(135deg, #0B0E17, #1E293B);
-      border: 1.5px solid var(--accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 12px var(--accent-glow);
+      object-fit: contain;
+      background-color: #0B0E17;
+      border: 1px solid rgba(225, 29, 72, 0.45);
+      padding: 3px;
       flex-shrink: 0;
     }
 
@@ -579,12 +577,11 @@
   <header>
     <div class="header-inner">
       <div class="brand">
-        <div class="brand-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <path d="M12 2L4 6v6c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V6l-8-4z"/>
-            <path d="M9 12l2 2 4-4"/>
-          </svg>
-        </div>
+        <<img
+          src="https://lgsaraivaasouza.github.io/midia-saraiva-labs/logo-oficial-saraiva-labs.png"
+          alt="Logo SARAIVA LABS"
+          class="brand-logo"
+        />
         <div class="brand-text">
           <h1>SARAIVA LABS</h1>
           <span>Solicitação • Loja Hortolândia</span>
