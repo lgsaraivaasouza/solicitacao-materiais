@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#0B0E17" />
-  <title>Solicitação de Materiais • Loja Hortolândia | SARAIVA LABS</title>
+  <title>Solicitação de Materiais • SARAIVA LABS</title>
   <link rel="icon" type="image/png" href="https://lgsaraivaasouza.github.io/midia-saraiva-labs/logo-oficial-saraiva-labs.png" />
   <link rel="manifest" href="manifest.json" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -145,7 +145,6 @@
       color: var(--accent-light);
     }
 
-    /* Navegação por 3 Abas */
     .tabs {
       max-width: 780px;
       width: 100%;
@@ -511,7 +510,7 @@
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.82);
+      background: rgba(0, 0, 0, 0.85);
       z-index: 100;
       display: none;
       align-items: center;
@@ -536,6 +535,7 @@
       overflow: hidden;
       background: #000;
       margin: 12px 0;
+      min-height: 220px;
     }
 
     .order-card {
@@ -653,7 +653,7 @@
         />
         <div class="brand-text">
           <h1>SARAIVA LABS</h1>
-          <span>Solicitação • Loja Hortolândia</span>
+          <span id="headerSubtitle">Solicitação • Loja Hortolândia</span>
         </div>
       </div>
       <div class="header-actions">
@@ -681,7 +681,7 @@
       <div class="card">
         <div class="card-title">
           <span>Buscar ou Bipar Produto</span>
-          <span class="status-pill loading" id="syncStatus">Sincronizando CD...</span>
+          <span class="status-pill loading" id="syncStatus">Conectando Supabase...</span>
         </div>
 
         <div class="search-row">
@@ -761,7 +761,6 @@
 
     <!-- ABA 3: GESTÃO CD (BAIXA DE PEDIDOS COM PIN) -->
     <section id="tab-gestao" class="hidden">
-      <!-- Tela de Bloqueio PIN -->
       <div class="card" id="adminLockBox">
         <div class="card-title">
           <span>Acesso Restrito • Gestão CD</span>
@@ -776,7 +775,6 @@
         <div class="alert-box alert-error" id="adminLockError"></div>
       </div>
 
-      <!-- Painel Desbloqueado -->
       <div class="card hidden" id="adminPanelBox">
         <div class="card-title">
           <span>Painel de Baixa • Centro de Distribuição</span>
@@ -803,7 +801,7 @@
     <strong>Saraiva Labs © 2026</strong> • Inteligência e Otimização de Processos Logísticos
   </footer>
 
-  <!-- MODAL SCANNER CÂMERA -->
+  <!-- MODAL SCANNER CÂMERA (OTIMIZADO ANDROID + IOS) -->
   <div class="modal-backdrop" id="scannerModal">
     <div class="modal-content">
       <div class="card-title" style="margin-bottom:0;">
@@ -811,24 +809,71 @@
         <button class="btn-secondary" id="btnCloseScanner" type="button" style="padding:6px 10px;">Fechar</button>
       </div>
       <div id="reader"></div>
-      <p style="font-size:12px;color:var(--text-muted);text-align:center;">
-        Aponte a câmera para o código de barras (EAN) do produto.
+      <p style="font-size:12px;color:var(--text-muted);text-align:center;margin-bottom:12px;">
+        Mantenha o código de barras centralizado a cerca de 15 cm da câmera.
       </p>
+      <div style="text-align:center;">
+        <label class="btn-secondary" style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
+          📸 Ler por Foto (Alternativa iPhone)
+          <input type="file" id="barcodeFileInput" accept="image/*" capture="environment" style="display:none;" />
+        </label>
+      </div>
     </div>
   </div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbxiGD9PJyhUORH1tUofiNk3GQzRKMyffh6aDiuj9N5LcRmCqiEiy7dS2pVl3v9knanT/exec';
+    // Configuração Supabase (Leitura e Gravação em < 150ms)
+    const SUPABASE_URL = 'https://vtykzhvwvvwmtmysczlo.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_PcYHicqZXLgO4UBDX2idfQ_OeUBtEGC';
+
+    // Endpoint Apps Script apenas para disparo do e-mail oficial em segundo plano
+    const EMAIL_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxiGD9PJyhUORH1tUofiNk3GQzRKMyffh6aDiuj9N5LcRmCqiEiy7dS2pVl3v9knanT/exec';
+
+    // Suporte Multi-Loja via parâmetro ?loja= (Padrão: Loja Hortolândia)
+    const LOJAS_MAP = {
+      'hortolandia': { nome: 'Loja Hortolândia', prefixo: 'HTL' },
+      'benjamim': { nome: 'Loja 02 - Benjamim', prefixo: 'BJM' },
+      'glicerio': { nome: 'Loja 03 - Glicério', prefixo: 'GLC' },
+      'trezedemaio': { nome: 'Loja 05 - Treze de Maio', prefixo: 'TDM' },
+      'moraesbarros': { nome: 'Loja 07 - Moraes Barros', prefixo: 'MBR' },
+      'regentefeijo': { nome: 'Loja 09 - Regente Feijó', prefixo: 'RFJ' },
+      'centro': { nome: 'Loja 11 - Centro', prefixo: 'CTR' },
+      'morato': { nome: 'Loja Morato', prefixo: 'MRT' }
+    };
+
+    const paramsUrl = new URLSearchParams(window.location.search);
+    const lojaSlug = (paramsUrl.get('loja') || 'hortolandia').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
+    const LOJA_ATUAL = LOJAS_MAP[lojaSlug] || { nome: 'Loja Hortolândia', prefixo: 'HTL' };
+
+    document.getElementById('headerSubtitle').textContent = `Solicitação • ${LOJA_ATUAL.nome}`;
+    document.title = `Solicitação de Materiais • ${LOJA_ATUAL.nome} | SARAIVA LABS`;
 
     let catalogo = [];
     let mapaEAN = new Map();
     let mapaEANLimpo = new Map();
     let pedidosHistorico = [];
     let produtoSelecionado = null;
-    let carrinho = JSON.parse(localStorage.getItem('saraiva_cart_htl') || '[]');
+    const cartStorageKey = `saraiva_cart_${LOJA_ATUAL.prefixo}`;
+    let carrinho = JSON.parse(localStorage.getItem(cartStorageKey) || '[]');
     let html5QrCode = null;
     let adminPinSalvo = sessionStorage.getItem('saraiva_cd_pin') || '';
     let filtroAdminAtual = 'abertos';
+
+    // Helper REST Supabase
+    async function supabaseFetch(path, options = {}) {
+      const headers = {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        ...(options.headers || {})
+      };
+      const resp = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, { ...options, headers });
+      if (!resp.ok) {
+        const txt = await resp.text();
+        throw new Error(txt || `Erro HTTP ${resp.status}`);
+      }
+      return resp.json();
+    }
 
     // Tema
     const savedTheme = localStorage.getItem('saraiva_theme') || 'dark';
@@ -858,7 +903,6 @@
         document.getElementById('tab-nova').classList.toggle('hidden', tab !== 'nova');
         document.getElementById('tab-historico').classList.toggle('hidden', tab !== 'historico');
         document.getElementById('tab-gestao').classList.toggle('hidden', tab !== 'gestao');
-
         if (tab === 'gestao') verificarEstadoAdmin();
       });
     });
@@ -867,27 +911,60 @@
       return String(v || '').trim().replace(/^0+/, '');
     }
 
-    async function carregarDados(forceRefresh = false) {
+    // Carregar Estoque (paginado em paralelo para superar limite de 1000 linhas por request do PostgREST) + Pedidos
+    async function carregarDados() {
       const statusEl = document.getElementById('syncStatus');
-      statusEl.textContent = 'Sincronizando CD...';
+      statusEl.textContent = 'Sincronizando...';
       statusEl.classList.add('loading');
 
       try {
-        const url = API_URL + (forceRefresh ? '?refresh=1' : '');
-        const resp = await fetch(url);
-        const data = await resp.json();
+        const [p1, p2, p3, p4, p5, pedidosRaw] = await Promise.all([
+          supabaseFetch('estoque_shopify?select=ean,ean_limpo,sku,descricao,saldo&saldo=gt.0&order=descricao.asc&limit=1000&offset=0'),
+          supabaseFetch('estoque_shopify?select=ean,ean_limpo,sku,descricao,saldo&saldo=gt.0&order=descricao.asc&limit=1000&offset=1000'),
+          supabaseFetch('estoque_shopify?select=ean,ean_limpo,sku,descricao,saldo&saldo=gt.0&order=descricao.asc&limit=1000&offset=2000'),
+          supabaseFetch('estoque_shopify?select=ean,ean_limpo,sku,descricao,saldo&saldo=gt.0&order=descricao.asc&limit=1000&offset=3000'),
+          supabaseFetch('estoque_shopify?select=ean,ean_limpo,sku,descricao,saldo&saldo=gt.0&order=descricao.asc&limit=1000&offset=4000'),
+          supabaseFetch('pedidos_lojas?select=*&order=data_pedido.desc&limit=1000')
+        ]);
 
-        if (!data.ok) throw new Error(data.erro || 'Erro ao carregar base.');
-
-        catalogo = data.catalogo || [];
-        pedidosHistorico = data.pedidos || [];
+        catalogo = [...p1, ...p2, ...p3, ...p4, ...p5];
 
         mapaEAN.clear();
         mapaEANLimpo.clear();
         catalogo.forEach(p => {
           mapaEAN.set(p.ean, p);
-          mapaEANLimpo.set(p.eanLimpo || eanLimpo(p.ean), p);
+          mapaEANLimpo.set(p.ean_limpo || eanLimpo(p.ean), p);
         });
+
+        // Agrupa linhas de pedidos por numero_pedido
+        const mapaPedidos = new Map();
+        pedidosRaw.forEach(r => {
+          if (!mapaPedidos.has(r.numero_pedido)) {
+            const dt = new Date(r.data_pedido);
+            const dataFmt = dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            mapaPedidos.set(r.numero_pedido, {
+              numeroPedido: r.numero_pedido,
+              loja: r.loja,
+              data: dataFmt,
+              status: r.status,
+              observacao: r.observacao || '',
+              itens: [],
+              totalItens: 0,
+              totalUnidades: 0
+            });
+          }
+          const ped = mapaPedidos.get(r.numero_pedido);
+          ped.itens.push({
+            sku: r.sku,
+            ean: r.ean,
+            descricao: r.descricao,
+            quantidade: r.quantidade
+          });
+          ped.totalItens += 1;
+          ped.totalUnidades += Number(r.quantidade) || 0;
+        });
+
+        pedidosHistorico = Array.from(mapaPedidos.values());
 
         statusEl.textContent = `${catalogo.length} itens disponíveis`;
         statusEl.classList.remove('loading');
@@ -895,7 +972,7 @@
         renderizarPedidosAdmin();
       } catch (err) {
         statusEl.textContent = 'Erro de conexão';
-        mostrarAlerta('searchAlert', 'Não foi possível conectar ao estoque do CD: ' + err.message);
+        mostrarAlerta('searchAlert', 'Erro ao sincronizar com Supabase: ' + err.message);
       }
     }
 
@@ -927,7 +1004,7 @@
 
       const encontrados = catalogo.filter(p =>
         p.ean.includes(termo) ||
-        (termoLimpo && p.eanLimpo === termoLimpo) ||
+        (termoLimpo && p.ean_limpo === termoLimpo) ||
         p.sku.toLowerCase().includes(termoLower) ||
         p.descricao.toLowerCase().includes(termoLower)
       ).slice(0, 25);
@@ -1049,7 +1126,7 @@
     });
 
     function salvarERenderizarCarrinho() {
-      localStorage.setItem('saraiva_cart_htl', JSON.stringify(carrinho));
+      localStorage.setItem(cartStorageKey, JSON.stringify(carrinho));
       const listEl = document.getElementById('cartList');
       const checkoutEl = document.getElementById('checkoutArea');
       const totalUn = carrinho.reduce((a, b) => a + b.quantidade, 0);
@@ -1085,27 +1162,27 @@
       });
     }
 
-    // Enviar Pedido ao Backend
+    // Enviar Pedido via RPC Transacional do Supabase + Notificação E-mail em Segundo Plano
     document.getElementById('btnSubmitOrder').addEventListener('click', async () => {
       if (carrinho.length === 0) return;
 
       const btn = document.getElementById('btnSubmitOrder');
+      const obs = document.getElementById('obsInput').value.trim();
       btn.disabled = true;
-      btn.textContent = 'Validando saldo ao vivo e enviando...';
+      btn.textContent = 'Validando saldo e gravando...';
       mostrarAlerta('checkoutError', '');
       mostrarAlerta('checkoutSuccess', '');
 
       try {
-        const resp = await fetch(API_URL, {
+        const data = await supabaseFetch('rpc/criar_pedido_loja', {
           method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({
-            itens: carrinho,
-            observacao: document.getElementById('obsInput').value.trim()
+            p_loja: LOJA_ATUAL.nome,
+            p_prefixo: LOJA_ATUAL.prefixo,
+            p_observacao: obs,
+            p_itens: carrinho
           })
         });
-
-        const data = await resp.json();
 
         if (!data.ok) {
           if (data.tipoErro === 'VALIDACAO_ESTOQUE' && data.erros) {
@@ -1116,11 +1193,27 @@
           return;
         }
 
+        // Dispara o e-mail pelo Apps Script em segundo plano sem travar a UI
+        const agoraFmt = new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        fetch(EMAIL_WEBHOOK_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'notificar_pedido',
+            numeroPedido: data.numeroPedido,
+            loja: LOJA_ATUAL.nome,
+            dataHora: agoraFmt,
+            itens: data.itensValidados || carrinho,
+            observacao: obs
+          })
+        }).catch(() => {});
+
         carrinho = [];
         document.getElementById('obsInput').value = '';
         salvarERenderizarCarrinho();
-        mostrarAlerta('checkoutSuccess', `Solicitação ${data.numeroPedido} enviada com sucesso ao CD! Relatório disparado por e-mail.`);
-        carregarDados(true);
+        mostrarAlerta('checkoutSuccess', `Solicitação ${data.numeroPedido} gravada com sucesso! Relatório enviado ao CD.`);
+        await carregarDados();
       } catch (err) {
         mostrarAlerta('checkoutError', 'Falha de comunicação ao enviar pedido: ' + err.message);
       } finally {
@@ -1137,17 +1230,18 @@
       return 'st-pendente';
     }
 
-    // Renderizar Histórico (Loja)
+    // Histórico da Loja
     function renderizarPedidos() {
       const container = document.getElementById('ordersList');
-      document.getElementById('badgeOrders').textContent = pedidosHistorico.length;
+      const pedidosDaLoja = pedidosHistorico.filter(p => p.loja === LOJA_ATUAL.nome);
+      document.getElementById('badgeOrders').textContent = pedidosDaLoja.length;
 
-      if (pedidosHistorico.length === 0) {
-        container.innerHTML = '<div class="empty-state">Nenhuma solicitação registrada ainda.</div>';
+      if (pedidosDaLoja.length === 0) {
+        container.innerHTML = '<div class="empty-state">Nenhuma solicitação registrada ainda para esta unidade.</div>';
         return;
       }
 
-      container.innerHTML = pedidosHistorico.map(p => {
+      container.innerHTML = pedidosDaLoja.map(p => {
         const linhas = p.itens.map(i => `
           <div class="order-line">
             <div>
@@ -1239,12 +1333,13 @@
           <div class="order-card expanded">
             <div class="order-header" onclick="this.parentElement.classList.toggle('expanded')">
               <div>
-                <strong style="font-size:14px;display:block;">${p.numeroPedido}</strong>
+                <strong style="font-size:14px;display:block;">${p.numeroPedido} • ${p.loja}</strong>
                 <span class="result-meta">${p.data} • ${p.totalItens} SKUs (${p.totalUnidades} un.)</span>
               </div>
               <span class="badge-status ${classeStatus(p.status)}">${p.status}</span>
             </div>
             <div class="order-body">
+              ${p.observacao ? `<div style="font-size:12px;color:#FBBF24;padding:8px 0;border-bottom:1px dashed var(--border);">Obs: ${p.observacao}</div>` : ''}
               ${linhas}
               <div class="admin-actions-bar">
                 ${p.status !== 'Em Separação' && p.status !== 'Finalizado' ? `
@@ -1274,18 +1369,14 @@
       btnEl.textContent = 'Salvando...';
 
       try {
-        const resp = await fetch(API_URL, {
+        const data = await supabaseFetch('rpc/atualizar_status_pedido_cd', {
           method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({
-            action: 'atualizar_status',
-            numeroPedido: numeroPedido,
-            novoStatus: novoStatus,
-            pin: adminPinSalvo
+            p_numero_pedido: numeroPedido,
+            p_novo_status: novoStatus,
+            p_pin: adminPinSalvo
           })
         });
-
-        const data = await resp.json();
 
         if (!data.ok) {
           if (String(data.erro).includes('PIN')) {
@@ -1300,7 +1391,7 @@
         }
 
         mostrarAlerta('adminActionSuccess', `Pedido ${numeroPedido} atualizado para "${novoStatus}".`);
-        await carregarDados(false);
+        await carregarDados();
       } catch (err) {
         mostrarAlerta('adminActionError', 'Falha de comunicação: ' + err.message);
       } finally {
@@ -1309,22 +1400,78 @@
       }
     }
 
-    // Scanner de Código de Barras pela Câmera
+    // --- SCANNER DE CÓDIGO DE BARRAS OTIMIZADO PARA IOS (IPHONE) E ANDROID ---
+    function criarInstanciaScanner() {
+      const formatos1D = typeof Html5QrcodeSupportedFormats !== 'undefined'
+        ? [
+            Html5QrcodeSupportedFormats.EAN_13,
+            Html5QrcodeSupportedFormats.EAN_8,
+            Html5QrcodeSupportedFormats.UPC_A,
+            Html5QrcodeSupportedFormats.UPC_E,
+            Html5QrcodeSupportedFormats.CODE_128
+          ]
+        : undefined;
+
+      return new Html5Qrcode('reader', {
+        formatsToSupport: formatos1D,
+        experimentalFeatures: { useBarCodeDetectorIfSupported: true },
+        verbose: false
+      });
+    }
+
     document.getElementById('btnOpenScanner').addEventListener('click', () => {
       document.getElementById('scannerModal').classList.add('open');
-      html5QrCode = new Html5Qrcode('reader');
+      html5QrCode = criarInstanciaScanner();
+
+      const configScanner = {
+        fps: 15,
+        qrbox: (viewfinderWidth, viewfinderHeight) => {
+          const w = Math.min(Math.floor(viewfinderWidth * 0.85), 320);
+          const h = Math.min(Math.floor(viewfinderHeight * 0.45), 150);
+          return { width: Math.max(w, 220), height: Math.max(h, 110) };
+        },
+        aspectRatio: 1.777778,
+        videoConstraints: {
+          facingMode: 'environment',
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+          focusMode: 'continuous'
+        }
+      };
+
       html5QrCode.start(
         { facingMode: 'environment' },
-        { fps: 12, qrbox: { width: 260, height: 140 } },
+        configScanner,
         (decodedText) => {
           if (navigator.vibrate) navigator.vibrate(100);
           fecharScanner();
           buscarPorCodigoExato(decodedText.trim());
         }
       ).catch(err => {
-        fecharScanner();
-        mostrarAlerta('searchAlert', 'Não foi possível acessar a câmera: ' + err);
+        mostrarAlerta('searchAlert', 'Câmera ao vivo indisponível neste navegador. Use o botão "Ler por Foto" ou digite o EAN.');
       });
+    });
+
+    // Plano B infalível para iPhone/iOS: leitura direta pela foto da câmera nativa
+    document.getElementById('barcodeFileInput').addEventListener('change', async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      try {
+        if (html5QrCode) {
+          try { await html5QrCode.stop(); } catch (_) {}
+        } else {
+          html5QrCode = criarInstanciaScanner();
+        }
+        const decodedText = await html5QrCode.scanFile(file, false);
+        fecharScanner();
+        buscarPorCodigoExato(decodedText.trim());
+      } catch (err) {
+        fecharScanner();
+        mostrarAlerta('searchAlert', 'Não foi possível identificar o código de barras na foto. Tente aproximar mais ou digitar o EAN.');
+      } finally {
+        e.target.value = '';
+      }
     });
 
     function fecharScanner() {
@@ -1336,12 +1483,12 @@
     }
 
     document.getElementById('btnCloseScanner').addEventListener('click', fecharScanner);
-    document.getElementById('btnRefresh').addEventListener('click', () => carregarDados(true));
-    document.getElementById('btnReloadOrders').addEventListener('click', () => carregarDados(true));
+    document.getElementById('btnRefresh').addEventListener('click', () => carregarDados());
+    document.getElementById('btnReloadOrders').addEventListener('click', () => carregarDados());
 
     // Boot
     salvarERenderCarrinho();
-    carregarDados(false);
+    carregarDados();
   </script>
 </body>
 </html>
