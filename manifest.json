@@ -1,0 +1,10 @@
+{
+  "name": "Solicitação de Materiais • Loja Hortolândia",
+  "short_name": "Pedidos HTL",
+  "description": "Sistema PWA de solicitação de materiais ao CD - SARAIVA LABS",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1E293B",
+  "theme_color": "#0B0E17",
+  "orientation": "portrait"
+}
